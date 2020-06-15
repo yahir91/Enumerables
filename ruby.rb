@@ -59,8 +59,23 @@ module Enumerable
       false
     end
   end
+
+  def my_count(arg = nil)
+    count = 0
+    if block_given?
+      my_each do |x|
+        count += 1 if yield(x) == true
+      end
+      puts count
+    elsif arg
+      my_each do |x|
+        count += 1 if arg == x
+      end
+      puts count
+    else
+      puts length
+    end
+  end
 end
 
-p([3, 6, 4, 8, 7].my_none? do |x|
-    x == 7
-  end)
+[3, 6, 4, 4, 8, 4].my_count(&:odd?)
