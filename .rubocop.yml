@@ -21,7 +21,7 @@ Metrics/BlockLength:
 Style/Documentation:
   Enabled: false
 Style/ClassAndModuleChildren:
-  Enabled: false
+  Enabled: true
 Style/EachForSimpleLoop:
   Enabled: false
 Style/AndOr:

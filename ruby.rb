@@ -1,57 +1,78 @@
 module Enumerable
   def my_each
-    i = 0
-    while i < length
-      yield(self[i])
-      i += 1
+    if block_given?
+      i = 0
+      while i < length
+        yield(self[i])
+        i += 1
+      end
+    else
+      to_enum
     end
   end
 
   def my_each_with_index
-    i = 0
-    while i < length
-      yield(self[i], i)
-      i += 1
+    if block_given?
+      i = 0
+      while i < length
+        yield(self[i], i)
+        i += 1
+      end
+    else
+      to_enum
     end
   end
 
   def my_select
-    array = []
-
-    my_each do |n|
-      array.push(n) if yield(n) == true
+    if block_given?
+      array = []
+      my_each do |n|
+        array.push(n) if yield(n) == true
+      end
+      array
+    else
+      to_enum
     end
-    puts array
   end
 
   def my_all?
-    something_false = 0
-    my_each do |x|
-      something_false = 1 if yield(x) == false || yield(x).nil?
-    end
-    if something_false.zero?
-      true
+    something_false = true
+    if block_given?
+      my_each do |x|
+        something_false = false if yield(x) == false || yield(x).nil?
+      end
     else
-      false
+      my_each do |x|
+        something_false = false if x == false || x.nil?
+      end
     end
+    something_false
   end
 
   def my_any?
-    everything_false = 0
-    my_each do |x|
-      everything_false = 1 if yield(x) != false && !yield(x).nil?
-    end
-    if everything_false.zero?
-      false
+    everything_false = false
+    if block_given?
+      my_each do |x|
+        everything_false = true if yield(x) != false && !yield(x).nil?
+      end
     else
-      true
+      my_each do |x|
+        everything_false = true if x != false && !x.nil?
+      end
     end
+    everything_false
   end
 
   def my_none?
     everything_false = 0
-    my_each do |x|
-      everything_false = 1 if yield(x) == true
+    if block_given?
+      my_each do |x|
+        everything_false = 1 if yield(x) == true
+      end
+    else
+      my_each do |x|
+        everything_false = 1 if x == true
+      end
     end
     if everything_false.zero?
       true
@@ -76,6 +97,20 @@ module Enumerable
       puts length
     end
   end
+
+  def my_map
+    new_array = []
+    if block_given?
+      my_each do |n|
+        new_array.push(yield(n))
+      end
+      new_array
+    else
+      to_enum
+    end
+  end
 end
 
-[3, 6, 4, 4, 8, 4].my_count(&:odd?)
+p([10, 10, 10].my_any? do |x|
+  x == 10
+end)
