@@ -26,20 +26,17 @@ module Enumerable
 
   def my_all?
     something_false = 0
-    my_each do |x| 
-      if yield(x) == false || yield(x) == nil
-        something_false = 1
-      end
+    my_each do |x|
+      something_false = 1 if yield(x) == false || yield(x).nil?
     end
-    if something_false == 0
+    if something_false.zero?
       true
-    else 
+    else
       false
     end
   end
-
 end
 
 p([5, 5, 5, 5, 5, 5].my_all? do |x|
-  x==5
+  x == 5
 end)
