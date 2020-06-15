@@ -47,8 +47,20 @@ module Enumerable
       true
     end
   end
+
+  def my_none?
+    everything_false = 0
+    my_each do |x|
+      everything_false = 1 if yield(x) == true
+    end
+    if everything_false.zero?
+      true
+    else
+      false
+    end
+  end
 end
 
-p([3, 6, 4, 8, 5].my_any? do |x|
-  x == 7
-end)
+p([3, 6, 4, 8, 7].my_none? do |x|
+    x == 7
+  end)
