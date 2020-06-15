@@ -14,8 +14,17 @@ module Enumerable
       i += 1
     end
   end
+
+  def my_select
+    array = []
+
+    my_each do |n|
+      array.push(n) if yield(n) == true
+    end
+    puts array
+  end
 end
 
-[1, 3, 4, 5, 5, 9].my_each_with_index do |x, y|
-  puts x, y
+[1, 3, 4, 5, 5, 9].my_select do |n|
+  n == 5
 end
