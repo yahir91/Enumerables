@@ -35,8 +35,20 @@ module Enumerable
       false
     end
   end
+
+  def my_any?
+    everything_false = 0
+    my_each do |x|
+      everything_false = 1 if yield(x) != false && !yield(x).nil?
+    end
+    if everything_false.zero?
+      false
+    else
+      true
+    end
+  end
 end
 
-p([5, 5, 5, 5, 5, 5].my_all? do |x|
-  x == 5
+p([3, 6, 4, 8, 5].my_any? do |x|
+  x == 7
 end)
