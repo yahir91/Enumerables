@@ -109,8 +109,35 @@ module Enumerable
       to_enum
     end
   end
+  def my_inject(*arg)
+    puts arg
+    if block_given?
+      if arg[0].nil?
+        memo = self[0]
+        i=1
+      else
+        memo =arg[0]
+        i=0
+      end
+      while i<length 
+        memo=yield(memo,self[i])
+        i += 1
+      end
+    else
+      operator = arg[0].is_a?(Symbol) ?  arg[0] : arg[1]
+      memo = arg[0].is_a?(Symbol) ? self[0] : arg[0]
+      i= arg[0].is_a?(Symbol) ? i= 1 : i=0
+      while i < length
+        memo= memo.send(operator, self[i])
+        i+= 1
+      end
+    end
+    memo
+  end
+  
 end
 
-p([10, 10, 10].my_any? do |x|
-  x == 10
+p(longest = %w{ cat sheep bear }.inject do |memo, word|
+  memo.length > word.length ? memo : word
 end)
+
