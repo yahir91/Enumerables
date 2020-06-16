@@ -1,50 +1,31 @@
 module Enumerable
   def my_each
-    if block_given?
-      i = 0
-      while i < length
-        yield(self[i])
-        i += 1
-      end
-    else
-      to_enum
-    end
+    return to_enum unless block_given?
+
+    length.times { |i| yield(self[i]) }
+    self
   end
 
   def my_each_with_index
-    if block_given?
-      i = 0
-      while i < length
-        yield(self[i], i)
-        i += 1
-      end
-    else
-      to_enum
-    end
+    return to_enum unless block_given?
+
+    length.times { |i| yield(self[i], i) }
   end
 
   def my_select
-    if block_given?
-      array = []
-      my_each do |n|
-        array.push(n) if yield(n) == true
-      end
-      array
-    else
-      to_enum
-    end
+    return to_enum unless block_given?
+
+    array = []
+    my_each { |n| array.push(n) if yield(n) == true }
+    array
   end
 
   def my_all?
     something_false = true
     if block_given?
-      my_each do |x|
-        something_false = false if yield(x) == false || yield(x).nil?
-      end
+      my_each { |x| something_false = false if yield(x) == false || yield(x).nil? }
     else
-      my_each do |x|
-        something_false = false if x == false || x.nil?
-      end
+      my_each { |x| something_false = false if x == false || x.nil? }
     end
     something_false
   end
@@ -52,92 +33,70 @@ module Enumerable
   def my_any?
     everything_false = false
     if block_given?
-      my_each do |x|
-        everything_false = true if yield(x) != false && !yield(x).nil?
-      end
+      my_each { |x| everything_false = true if yield(x) != false && !yield(x).nil? }
     else
-      my_each do |x|
-        everything_false = true if x != false && !x.nil?
-      end
+      my_each { |x| everything_false = true if x != false && !x.nil? }
     end
     everything_false
   end
 
   def my_none?
-    everything_false = 0
+    everything_false = true
     if block_given?
-      my_each do |x|
-        everything_false = 1 if yield(x) == true
-      end
+      my_each { |x| everything_false = false if yield(x) == true }
     else
-      my_each do |x|
-        everything_false = 1 if x == true
-      end
+      my_each { |x| everything_false = false if x == true }
     end
-    if everything_false.zero?
-      true
-    else
-      false
-    end
+    everything_false
   end
 
   def my_count(arg = nil)
     count = 0
     if block_given?
-      my_each do |x|
-        count += 1 if yield(x) == true
-      end
-      puts count
+      my_each { |x| count += 1 if yield(x) == true }
+      count
     elsif arg
-      my_each do |x|
-        count += 1 if arg == x
-      end
-      puts count
+      my_each { |x| count += 1 if arg == x }
+      count
     else
-      puts length
+      length
     end
   end
 
   def my_map
     new_array = []
-    if block_given?
-      my_each do |n|
-        new_array.push(yield(n))
-      end
-      new_array
-    else
-      to_enum
-    end
+    return to_enum unless block_given?
+
+    my_each { |x| new_array.push(yield(x)) }
+    new_array
   end
+
   def my_inject(*arg)
-    puts arg
     if block_given?
-      if arg[0].nil?
-        memo = self[0]
-        i=1
-      else
-        memo =arg[0]
-        i=0
-      end
-      while i<length 
-        memo=yield(memo,self[i])
+      memo = arg[0].nil? ? self[0] : arg[0]
+      i = arg[0].nil? ? 1 : 0
+      while i < length
+        memo = yield(memo, self[i])
         i += 1
       end
     else
-      operator = arg[0].is_a?(Symbol) ?  arg[0] : arg[1]
+      operator = arg[0].is_a?(Symbol) ? arg[0] : arg[1]
       memo = arg[0].is_a?(Symbol) ? self[0] : arg[0]
-      i= arg[0].is_a?(Symbol) ? i= 1 : i=0
+      i = arg[0].is_a?(Symbol) ? 1 : 0
       while i < length
-        memo= memo.send(operator, self[i])
-        i+= 1
+        memo = memo.send(operator, self[i])
+        i += 1
       end
     end
     memo
   end
-  
+
+  def multiply_els
+    my_inject(:*)
+  end
 end
 
-p(longest = %w{ cat sheep bear }.inject do |memo, word|
-  memo.length > word.length ? memo : word
-end)
+puts [5, 4, 5].multiply_els
+
+p([5, 4, 5].my_inject(:*))
 
