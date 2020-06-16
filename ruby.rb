@@ -63,7 +63,7 @@ module Enumerable
     end
   end
 
-  def my_map(proc1=nil)
+  def my_map(proc1 = nil)
     new_array = []
     return to_enum unless block_given?
 
@@ -100,15 +100,8 @@ module Enumerable
   end
 end
 
-puts [5, 4, 5].multiply_els
-
-p([5, 4, 5].my_inject(:*))
-
-proc1 = Proc.new {|x| x**2 }
-
-p([20, 40, 50].my_map(&proc1))
-
-p([20, 20, 20].my_all? do |x|
-  x==20
-end)
-
+puts [10, 25, 15, 30] .multiply_els
+puts [10, 25, 15, 30] .inject(:*)
+puts [10, 25, 15, 30] .my_inject(5, :*)
+puts [10, 25, 15, 30] .my_inject { |sum, n| sum + n }
+puts [10, 25, 15, 30] .my_inject { |product, n| product * n }
