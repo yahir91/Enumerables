@@ -20,34 +20,32 @@ module Enumerable
     array
   end
 
-  def my_all?
-    something_false = true
-    if block_given?
-      my_each { |x| something_false = false if yield(x) == false || yield(x).nil? }
+  def my_all?(*arg)
+    all_true = true
+    if !arg.empty?
+      my_each { |el| all_true &= arg[0] === el }
+    elsif block_given?
+      my_each { |el| all_true &= yield(el) }
     else
-      my_each { |x| something_false = false if x == false || x.nil? }
+      my_each { |el| all_true &= el }
     end
-    something_false
+    all_true
   end
 
-  def my_any?
-    everything_false = false
-    if block_given?
-      my_each { |x| everything_false = true if yield(x) != false && !yield(x).nil? }
+  def my_any?(*arg)
+    something_true = false
+    if !arg.empty?
+      my_each { |el| something_true |= arg[0] === el }
+    elsif block_given?
+      my_each { |el| something_true |= yield(el) }
     else
-      my_each { |x| everything_false = true if x != false && !x.nil? }
+      my_each { |el| something_true |= el }
     end
-    everything_false
+    something_true
   end
 
-  def my_none?
-    everything_false = true
-    if block_given?
-      my_each { |x| everything_false = false if yield(x) == true }
-    else
-      my_each { |x| everything_false = false if x == true }
-    end
-    everything_false
+  def my_none?(*arg)
+    !my_any?(*arg)
   end
 
   def my_count(arg = nil)
@@ -76,21 +74,13 @@ module Enumerable
   end
 
   def my_inject(*arg)
+    operator = arg.pop unless block_given?
+    my_copy = arg + to_a
+    memo = my_copy.shift
     if block_given?
-      memo = arg[0].nil? ? self[0] : arg[0]
-      i = arg[0].nil? ? 1 : 0
-      while i < length
-        memo = yield(memo, self[i])
-        i += 1
-      end
+      my_copy.my_each { |el| memo = yield(memo, el) }
     else
-      operator = arg[0].is_a?(Symbol) ? arg[0] : arg[1]
-      memo = arg[0].is_a?(Symbol) ? self[0] : arg[0]
-      i = arg[0].is_a?(Symbol) ? 1 : 0
-      while i < length
-        memo = memo.send(operator, self[i])
-        i += 1
-      end
+      my_copy.my_each { |el| memo = memo.send(operator, el) }
     end
     memo
   end
@@ -99,9 +89,3 @@ module Enumerable
     my_inject(:*)
   end
 end
-
-puts [10, 25, 15, 30] .multiply_els
-puts [10, 25, 15, 30] .inject(:*)
-puts [10, 25, 15, 30] .my_inject(5, :*)
-puts [10, 25, 15, 30] .my_inject { |sum, n| sum + n }
-puts [10, 25, 15, 30] .my_inject { |product, n| product * n }
