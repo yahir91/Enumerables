@@ -108,3 +108,4 @@ end
 def multiply_els(array)
   array.my_inject(:*)
 end
+
