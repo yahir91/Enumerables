@@ -96,27 +96,55 @@ describe Enumerable do
     end
   end
 
-  it 'my_count' do
-    actual = [1, 2, 3].my_count { |x| x < 2 }
-    expected = 1
-    expect(actual).to eq expected
+  context 'my_count' do
+    it 'my_count with block' do
+      actual = [1, 2, 3].my_count { |x| x < 2 }
+      expected = 1
+      expect(actual).to eq expected
+    end
+    it 'my_count without block' do
+      actual = [1, 2, 3].my_count
+      expected = 3
+      expect(actual).to eq expected
+    end
+    it 'my_count with argument' do
+      actual = [1, 2, 3].my_count(3)
+      expected = 1
+      expect(actual).to eq expected
+    end
   end
 
-  it 'my_map' do
-    actual = [1, 2, 3].my_map { |x| x }
-    expected = [1, 2, 3]
-    expect(actual).to eq expected
+  context 'my_map' do
+    it 'my_map with block' do
+      actual = [1, 2, 3].my_map { |x| x }
+      expected = [1, 2, 3]
+      expect(actual).to eq expected
+    end
+    it 'my_map without block' do
+      actual = [1, 2, 3].my_map
+      expect(actual).to be_a(Enumerator)
+    end
   end
 
-  it 'my_inject' do
-    actual = [1, 2, 3].my_inject { |x, n| x + n }
-    expected = 6
-    expect(actual).to eq expected
+  context 'my_inject' do
+    it 'my_inject with block' do
+      actual = [1, 2, 3].my_inject { |x, n| x + n }
+      expected = 6
+      expect(actual).to eq expected
+    end
+
+    it 'my_inject with symbol as an argument' do
+      actual = [1, 2, 3].my_inject(:+)
+      expected = 6
+      expect(actual).to eq expected
+    end
   end
 
-  it 'multiply_els' do
-    actual = multiply_els([1, 2, 3])
-    expected = 6
-    expect(actual).to eq expected
+  context 'multiply_els' do
+    it 'multiply_els' do
+      actual = multiply_els([1, 2, 3])
+      expected = 6
+      expect(actual).to eq expected
+    end
   end
 end
