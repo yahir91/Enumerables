@@ -1,17 +1,16 @@
 # Advanced Building Blocks - Enumerables
 
-
 > In this project, we implemented our version of Ruby’s enumerable methods:
->- #each
->- #each_with_index
->- #all?
->- #select
->- #any?
->- #none?
->- #count
->- #map
->- #inject
-
+>
+> - #each
+> - #each_with_index
+> - #all?
+> - #select
+> - #any?
+> - #none?
+> - #count
+> - #map
+> - #inject
 
 ## Built With
 
@@ -20,6 +19,16 @@
 ## Live Demo
 
 [Live Demo Link](https://repl.it/@MarilenaRoque/enumerablesmethods#main.rb)
+
+## Unit test (Rspec)
+
+To run the unit testings you will need to install the gem rspect with the following command
+
+`gem install rspec`
+
+To see the test results run the following command
+
+`rspec --format documentation`
 
 ## Author
 

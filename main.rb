@@ -58,7 +58,7 @@ module Enumerable
     elsif block_given?
       copy.my_each { |el| something_true |= yield(el) }
     else
-      copy.my_each { |el| something_true |= el }
+      copy.my_each { |_el| something_true |= false }
     end
     !something_true
   end
